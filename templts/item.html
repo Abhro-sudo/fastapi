@@ -27,6 +27,7 @@
                 messages.appendChild(message);
             }
             function sendMessage(event) {
+				var ws = new WebSocket(`ws://abhroapi.herokuapp.com/ws/${uid}`);
                 var input = document.getElementById("messageText");
                 ws.send(input.value);
                 input.value = '';
