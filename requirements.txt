@@ -77,7 +77,6 @@ starlette==0.17.1
 systemd-python==234
 Twisted==17.9.0
 typing_extensions==4.0.1
-ufw==0.36
 uritemplate==4.1.1
 urllib3==1.26.7
 uvicorn==0.16.0
