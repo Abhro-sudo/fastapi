@@ -18,7 +18,7 @@
         </ul>
         <script>
             var uid=`{{user}}`+Date.now();
-            var ws = new WebSocket(`ws://abhroapi/herokuapp.com/ws/${uid}`);
+            var ws = new WebSocket(`ws://abhroapi.herokuapp.com/ws/${uid}`);
             ws.onmessage = function(event) {
                 var messages = document.getElementById('messages');
                 var message = document.createElement('li');
