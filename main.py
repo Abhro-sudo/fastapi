@@ -1,6 +1,10 @@
 from fastapi import Depends, FastAPI, HTTPException, status, WebSocket, Response, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from typing import Optional, List
+from fastapi.logger import logger
+import asyncio
+import re
+import logging
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from fastapi.templating import Jinja2Templates
@@ -109,6 +113,7 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
 
 @app.post("/token")
 async def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends()):
+    print("this is me")
     user_dict = fake_users_db.get(form_data.username)
     if form_data.username in ActiveUser.username:
         return HTMLResponse(logdestroy)
@@ -116,17 +121,32 @@ async def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends
         raise HTTPException(status_code=400, detail="Incorrect username or password")
     user = UserInDB(**user_dict)
     hashed_password = fake_hash_password(form_data.password)
+    print(">>>>>>>",ActiveUser.username)
     if not hashed_password == user.hashed_password:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
     ActiveUser.username.append(form_data.username)
     return templates.TemplateResponse("item.html", {"request": request,"user": str(form_data.username)})
     #return HTMLResponse(html)
 
-@app.get("/logout/{user}")
-async def websocket_endpoint(user: str):
-    ActiveUser.username.remove(user.split('?')[0])
-    return HTMLResponse(login)
+# @app.websocket("/logout/{user}")
+# async def websocket_deadpoint(user: str, websocket: WebSocket):
+#     print("Current Active users: ", ActiveUser.username)
+#     print("Removing user: ",[re.findall(r'(\w+?)(\d+)', user)[0]][0][0])
+#     closer=await websocket.
+#     await manager.disconnect(closer)
+#     ActiveUser.username.remove([re.findall(r'(\w+?)(\d+)', user)[0]][0][0])
+#     print("new active users>>>",ActiveUser.username)
+#     return HTMLResponse(login)
 
+
+@app.get("/logout/{user}")
+async def websocket_logout(user: str):
+    print("140")
+    print("Current Active users: ", ActiveUser.username)
+    print("Removing user: ", user)
+    ActiveUser.username.remove(user)
+    print("new active users>>>", ActiveUser.username)
+    app.get("/")
 
 
 @app.get("/users/me")
@@ -370,11 +390,21 @@ async def get():
 @app.websocket("/ws/{client_id}")
 async def websocket_endpoint(websocket: WebSocket, client_id: str):
     await manager.connect(websocket)
-    while True:
+    chk=True
+    while chk:
         data = await websocket.receive_text()
-        await manager.broadcast(f"Client {client_id}: {data}")
+        print("Data ",data)
+        if data == 'SignalLogout':
+            manager.disconnect(websocket)
+            print("Current Active users: ", ActiveUser.username)
+            print("Removing user: ",[re.findall(r'(\w+?)(\d+)', client_id)[0]][0][0])
+            ActiveUser.username.remove([re.findall(r'(\w+?)(\d+)', client_id)[0]][0][0])
+            print("new active users>>>",ActiveUser.username)
+            chk = False
+        else:
+            await manager.broadcast(f"Client {client_id}: {data}")
+    print("Outside loop")
 
-
-
-
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
 

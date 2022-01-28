@@ -10,15 +10,15 @@
             <button>Send</button>
         </form>
         <div class="formbuilder-button form-group field-button-1643277139134">
-        <form method="GET" action="/logout/{{user}}" >
+        <form action="/"  onclick="logout()">
       <button>Logout</button>
      </form>
         </div>
         <ul id='messages'>
         </ul>
         <script>
-            var uid=`{{user}}`;
-            var ws = new WebSocket(`wss://abhroapi.herokuapp.com/ws/${uid}`);
+            var uid=`{{user}}`+Date.now();
+            var ws = new WebSocket(`ws://localhost:8000/ws/${uid}`);
             ws.onmessage = function(event) {
                 var messages = document.getElementById('messages');
                 var message = document.createElement('li');
@@ -32,10 +32,11 @@
                 input.value = '';
                 event.preventDefault();
             };
-            function logout(user){
-                var xmlHttp = new XMLHttpRequest();
-                xmlHttp.open("GET", "http://localhost:8000/logout/alice"); // true for asynchronous
-                 xmlHttp.send(ws);
+            function logout(){
+                ws.send('SignalLogout');
+<!--                var xmlHttp = new XMLHttpRequest();-->
+<!--                xmlHttp.open("POST", "/logout/${uid}"); // true for asynchronous-->
+<!--                xmlHttp.send(ws);-->
             };
         </script>
     </body>
