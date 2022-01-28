@@ -1,1 +1,1 @@
-web: uvicorn main:app --host=127.0.0.1 --port=${PORT:-5000}
+web: uvicorn main:app --host=abhroapi.herokuapp.com --port=${PORT:-80}
