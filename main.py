@@ -348,7 +348,7 @@ html = """
         </ul>
         <script>
             var uid=Date.now();
-            var ws = new WebSocket(`ws://localhost:8000/ws/${uid}`);
+            var ws = new WebSocket(`ws://0.0.0.0:5000/ws/${uid}`);
             ws.onmessage = function(event) {
                 var messages = document.getElementById('messages')
                 var message = document.createElement('li')
@@ -405,6 +405,6 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
             await manager.broadcast(f"Client {client_id}: {data}")
     print("Outside loop")
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+#if __name__ == "__main__":
+#    uvicorn.run(app, host="0.0.0.0", port=8000)
 
