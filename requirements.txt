@@ -19,7 +19,6 @@ constantly==15.1.0
 contextlib2==21.6.0
 contextvars==2.4
 cryptography==2.1.4
-distro-info===0.18ubuntu0.18.04.1
 fastapi==0.73.0
 fastapi-sessions==0.3.2
 frozenlist==1.2.0
