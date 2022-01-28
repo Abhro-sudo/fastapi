@@ -25,7 +25,7 @@
                 var content = document.createTextNode(event.data);
                 message.appendChild(content);
                 messages.appendChild(message);
-            };
+            }
             function sendMessage(event) {
                 var input = document.getElementById("messageText");
                 ws.send(input.value);
