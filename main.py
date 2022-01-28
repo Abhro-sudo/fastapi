@@ -121,10 +121,11 @@ async def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends
         raise HTTPException(status_code=400, detail="Incorrect username or password")
     user = UserInDB(**user_dict)
     hashed_password = fake_hash_password(form_data.password)
-    print(">>>>>>>",ActiveUser.username)
+    print(">>>>>>>124",ActiveUser.username)
     if not hashed_password == user.hashed_password:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
     ActiveUser.username.append(form_data.username)
+    print(">>>>>>>128",ActiveUser.username)
     return templates.TemplateResponse("item.html", {"request": request,"user": str(form_data.username)})
     #return HTMLResponse(html)
 
@@ -404,7 +405,6 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
             chk = False
         else:
             await manager.broadcast(f"Client {client_id}: {data}")
-    print("Outside loop")
 
 #if __name__ == "__main__":
 #    uvicorn.run(app, host="0.0.0.0", port=8000)
