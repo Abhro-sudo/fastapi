@@ -393,6 +393,7 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
     chk=True
     while chk:
         data = await websocket.receive_text()
+        print("CLIENTID>>>",client_id)
         print("Data ",data)
         if data == 'SignalLogout':
             manager.disconnect(websocket)
