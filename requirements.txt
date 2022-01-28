@@ -13,8 +13,6 @@ certifi==2021.10.8
 chardet==3.0.4
 charset-normalizer==2.0.8
 click==8.0.3
-cloud-init==20.2
-cloud-sql-python-connector==0.4.2
 colorama==0.3.7
 command-not-found==0.3
 configobj==5.0.6
