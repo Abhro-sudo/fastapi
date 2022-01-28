@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chat</title>
+    </head>
+    <body>
+        <h1>Websocket user: {{user}}</h1>
+        <form action="" onsubmit="sendMessage(event)">
+            <input type="text" id="messageText" autocomplete="off"/>
+            <button>Send</button>
+        </form>
+        <div class="formbuilder-button form-group field-button-1643277139134">
+        <form method="GET" action="/logout/{{user}}" >
+      <button>Logout</button>
+     </form>
+        </div>
+        <ul id='messages'>
+        </ul>
+        <script>
+            var uid=`{{user}}`;
+            var ws = new WebSocket(`ws://abhroapi.herokuapp.com/ws/${uid}`);
+            ws.onmessage = function(event) {
+                var messages = document.getElementById('messages');
+                var message = document.createElement('li');
+                var content = document.createTextNode(event.data);
+                message.appendChild(content);
+                messages.appendChild(message);
+            };
+            function sendMessage(event) {
+                var input = document.getElementById("messageText");
+                ws.send(input.value);
+                input.value = '';
+                event.preventDefault();
+            };
+            function logout(user){
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open("GET", "http://localhost:8000/logout/alice"); // true for asynchronous
+                 xmlHttp.send(ws);
+            };
+        </script>
+    </body>
+</html>
