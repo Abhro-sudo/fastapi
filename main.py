@@ -349,7 +349,7 @@ html = """
         </ul>
         <script>
             var uid=Date.now();
-            var ws = new WebSocket(`ws://0.0.0.0:5000/ws/${uid}`);
+            var ws = new WebSocket(`ws://localhost:8000/ws/${uid}`);
             ws.onmessage = function(event) {
                 var messages = document.getElementById('messages')
                 var message = document.createElement('li')
