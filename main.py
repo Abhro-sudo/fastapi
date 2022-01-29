@@ -116,7 +116,12 @@ async def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends
     print("this is me")
     user_dict = fake_users_db.get(form_data.username)
     if form_data.username in ActiveUser.username:
-        return HTMLResponse(logdestroy)
+        for wsconn in manager.connections:
+            print("Current websocket conns: ",wsconn.__dict__['scope']['path_params']['client_id'])
+            if form_data.username in wsconn.__dict__['scope']['path_params']['client_id']:
+                print()
+        return templates.TemplateResponse("logout.html", {"request": request, "user": str(form_data.username)})
+        #return HTMLResponse(logdestroy)
     if not user_dict:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
     user = UserInDB(**user_dict)
@@ -128,25 +133,22 @@ async def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends
     print(">>>>>>>128", ActiveUser.username)
     return templates.TemplateResponse("item.html", {"request": request,"user": str(form_data.username)})
 
-# @app.websocket("/logout/{user}")
-# async def websocket_deadpoint(user: str, websocket: WebSocket):
-#     print("Current Active users: ", ActiveUser.username)
-#     print("Removing user: ",[re.findall(r'(\w+?)(\d+)', user)[0]][0][0])
-#     closer=await websocket.
-#     await manager.disconnect(closer)
-#     ActiveUser.username.remove([re.findall(r'(\w+?)(\d+)', user)[0]][0][0])
-#     print("new active users>>>",ActiveUser.username)
-#     return HTMLResponse(login)
 
 
-@app.get("/logout/{user}")
+@app.post("/logout/{user}")
 async def websocket_logout(user: str):
-    print("140")
+    print("Logging out before relogging in...")
     print("Current Active users: ", ActiveUser.username)
-    print("Removing user: ", user)
-    ActiveUser.username.remove(user)
+    print("Removing user: ",user)
+    if user in ActiveUser.username:
+        for wsconn in manager.connections:
+            print("Current websocket conn: ", wsconn.__dict__['scope']['path_params']['client_id'])
+            if user in wsconn.__dict__['scope']['path_params']['client_id']:
+                ActiveUser.username.remove(user)
+                manager.disconnect(wsconn)
+                print("Disconnected from client: ",wsconn.__dict__['scope']['path_params'])
     print("new active users>>>", ActiveUser.username)
-    app.get("/")
+    return HTMLResponse(login)
 
 
 @app.get("/users/me")
