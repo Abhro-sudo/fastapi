@@ -10,7 +10,7 @@
             <button>Send</button>
         </form>
         <div class="formbuilder-button form-group field-button-1643277139134">
-        <form action="/"  onclick="logout()">
+        <form action="/"  onclick="logout(event)">
       <button>Logout</button>
      </form>
         </div>
@@ -32,7 +32,7 @@
                 input.value = '';
                 event.preventDefault();
             };
-            function logout(){
+            function logout(event){
                 ws.send('SignalLogout');
 <!--                var xmlHttp = new XMLHttpRequest();-->
 <!--                xmlHttp.open("POST", "/logout/${uid}"); // true for asynchronous-->
