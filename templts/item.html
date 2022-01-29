@@ -17,7 +17,7 @@
         <ul id='messages'>
         </ul>
         <script>
-            var uid=`{{user}}`+Date.now();
+            var uid=`{{user}}`;
             var ws = new WebSocket(`ws://abhroapi.herokuapp.com:5000/ws/${uid}`);
             ws.onmessage = function(event) {
 				alert("Connection established");
