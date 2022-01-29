@@ -20,6 +20,7 @@
             var uid=`{{user}}`+Date.now();
             var ws = new WebSocket(`wss://abhroapi.herokuapp.com:5000/ws/${uid}`);
             ws.onmessage = function(event) {
+				alert("Connection established");
                 var messages = document.getElementById('messages');
                 var message = document.createElement('li');
                 var content = document.createTextNode(event.data);
@@ -28,6 +29,7 @@
             };
             function sendMessage(event) {
                 var input = document.getElementById("messageText");
+				alert(`[message] Data received from server: ${event.value}`);
                 ws.send(input.value);
                 input.value = '';
                 event.preventDefault();
