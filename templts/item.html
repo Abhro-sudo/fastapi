@@ -29,7 +29,7 @@
             };
             function sendMessage(event) {
                 var input = document.getElementById("messageText");
-				alert(`[message] Data received from server: ${event}`);
+				alert(`[message] Data received from server: ${input.value}`);
                 ws.send(input.value);
                 input.value = '';
                 event.preventDefault();
