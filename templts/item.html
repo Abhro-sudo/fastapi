@@ -5,7 +5,7 @@
     </head>
     <body>
         <h1>Websocket user: {{user}}</h1>
-        <form action="" onsubmit="sendMessage(event)">
+        <form action="#" onsubmit="sendMessage(event)">
             <input type="text" id="messageText" autocomplete="off"/>
             <button>Send</button>
         </form>
@@ -29,7 +29,7 @@
             };
             function sendMessage(event) {
                 var input = document.getElementById("messageText");
-				alert(`[message] Data received from server: ${event.data}`);
+				alert(`[message] Data received from server: ${event}`);
                 ws.send(input.value);
                 input.value = '';
                 event.preventDefault();
