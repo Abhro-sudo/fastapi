@@ -390,21 +390,20 @@ async def get():
 @app.websocket("/ws/{client_id}")
 async def websocket_endpoint(websocket: WebSocket, client_id: str):
     await manager.connect(websocket)
-    print(websocket.client.port)
     chk=True
     while chk:
         data = await websocket.receive_text()
         print("Data ",data)
         if data == 'SignalLogout':
-            manager.disconnect(websocket)
-            print("CLIENTID>>>",client_id)
-            print("Current Active users: ", ActiveUser.username)
-            print("Removing user: ",[re.findall(r'(\w+?)(\d+)', client_id)[0]][0][0])
-            ActiveUser.username.remove([re.findall(r'(\w+?)(\d+)', client_id)[0]][0][0])
-            print("new active users>>>",ActiveUser.username)
+            if websocket in manager.connections:
+                manager.disconnect(websocket)
+                print("CLIENTID>>>",client_id)
+                print("Current Active users: ", ActiveUser.username)
+                print("Removing user: ",[re.findall(r'(\w+?)(\d+)', client_id)[0]][0][0])
+                ActiveUser.username.remove([re.findall(r'(\w+?)(\d+)', client_id)[0]][0][0])
+                print("new active users>>>",ActiveUser.username)
             chk = False
         else:
             await manager.broadcast(f"Client {client_id}: {data}")
     print("Outside loop")
-
 
